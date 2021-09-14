@@ -3,35 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "elevator.h"
 
-struct Node
-{
-    int  floor;
-    struct Node* next;
-};
 
-//Creates new node wtih new_floor value and adds to head_ref
-void append(struct Node** head_ref, int new_floor);
-//Moves through list at given node and prints floor values
-void printList(struct Node *node);
+
 //Creates linked list of random size < capacity with floor numbers
 //  < than max_floors, returns the head of this list
-struct Node *generatePassengers(int capacity, int max_floors);
-
-
-
-void main(){
-    //Initialize a node to hold the head value
-    struct Node* head;
-    //Call the function and create the head to the linked list
-    head = generatePassengers(18,20);
-    //Check the values of the list
-    printList(head);
-
-}
-
-
-
 struct Node *generatePassengers(int capacity, int max_floors) {
     srand ( time(NULL) );
 
@@ -46,6 +23,7 @@ struct Node *generatePassengers(int capacity, int max_floors) {
     return head;
 }
 
+//Creates new node wtih new_floor value and adds to head_ref
 void append(struct Node** head_ref, int new_floor)
 {
     // Allocate memory for new node and initialize its floor value
@@ -89,12 +67,14 @@ void append(struct Node** head_ref, int new_floor)
     
 }
 
+
+//Moves through list at given node and prints floor values
 void printList(struct Node *node)
 {
 //loop through linked list and print the floor values
   while (node != NULL)
   {
-     printf(" %d ", node->floor);
+     printf(" %d\n ", node->floor);
      node = node->next;
   }
 }
