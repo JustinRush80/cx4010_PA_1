@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "elevator.h"
-#include <unistd.h>
+#include <limits.h>
 
 
 // returns the average, min, and max times for every scenario
@@ -14,8 +14,8 @@ int analysis(){
     // struct Node second_Node = {-1,NULL};
 
     
-    // struct Node sc2[2] = {first_Node,second_Node};
-    // struct Node sc3[2] = {first_Node,second_Node};
+    struct Node sc2[2];
+    struct Node sc3[2];
 
     
     // scenario2(18,20, &sc2);
@@ -27,24 +27,40 @@ int analysis(){
    
 
     int n = 0;
+    int total = 0;
+    int maximum = 0;
+    int minimum = INT_MAX;
     double average = 0;
-    double maximum = 0;
-    double minimum = 0;
+    
+
 
     while(n < 1000){
         
-        printf("\nSec 1\n");
-        scenario1(18,20,&sc1,n);
-        iterateList(&sc1);
-
         
+       
+        scenario1(18,20,&sc1,n);
+        scenario2(18,20, &sc2); 
+        int sec = iterateList(&sc1);
+        total += sec;
 
+       
+        if (maximum < sec){
+            maximum = sec;  
+        }
+        else if (minimum > sec){
+            minimum = sec;
+        }
+    
         n++;
 
     }
-    return 0;
+    average = total/n;
+    printf("%d\n",maximum );
+    printf("%d\n",minimum );
+    printf("%f", average);
 
-    
+
+    return 0;
 
 
 }

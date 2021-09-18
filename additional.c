@@ -23,8 +23,8 @@ void scenario1(int capacity, int max_floors, struct Node *lists, int seed) {
 
 }
 
-void scenario2(int capacity, int max_floors, struct Node *lists[]) {
-    srand ( time(NULL) );
+void scenario2(int capacity, int max_floors, struct Node *lists[], int seed) {
+    srand ( seed );
 
     //Randomly generates passenger number 
     int number_passenger = (rand() % capacity)+1;
@@ -47,8 +47,8 @@ void scenario2(int capacity, int max_floors, struct Node *lists[]) {
     lists[1] = head2;
 }
 
-void scenario3(int capacity, int max_floors, int maxFloor1, struct Node *lists[]) {
-    srand ( time(NULL) );
+void scenario3(int capacity, int max_floors, int maxFloor1, struct Node *lists[], int seed) {
+    srand ( seed );
 
     //Randomly generates passenger number 
     int number_passenger = (rand() % capacity)+1;
@@ -111,11 +111,37 @@ void append(struct Node** head_ref, int new_floor) {
     }
 }
 
-void iterateList(struct Node *node) {
-//loop through linked list and print the floor values
-  while (node != NULL)
-  {
-     printf(" %d ", node->floor);
-     node = node->next;
+
+
+
+int sec = 0;
+int floor_cur = 0;
+int floor_next = 0;
+int idx = 0;
+
+//loop through linked list and return the sec of each iteration per secenario
+int iterateList(struct Node *node) {
+    
+    int sec = 0;
+    
+    struct Node* current = node;
+    while (current->next != NULL){
+       
+        idx ++;
+        floor_cur = current->floor;
+        floor_next = current ->next->floor;
+        if (idx==1){
+            sec += floor_cur*3;
+            
+
+        };
+        
+        sec += (floor_next-floor_cur)*3;
+
+        current = current->next;
   }
+
+  
+
+  return sec;
 }
