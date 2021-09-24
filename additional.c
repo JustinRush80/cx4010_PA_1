@@ -1,5 +1,3 @@
-// random assigments 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,9 +5,9 @@
 
 
 
-void scenario1(int capacity, int max_floors, struct Node *lists, int seed) {
-    srand ( seed );
-
+void scenario1(int capacity, int max_floors, struct Node *lists ) {
+    
+    
     //Randomly generates passenger number 
     int number_passenger = (rand() % capacity)+1;
     struct Node* head = NULL;
@@ -23,8 +21,8 @@ void scenario1(int capacity, int max_floors, struct Node *lists, int seed) {
 
 }
 
-void scenario2(int capacity, int max_floors, struct Node *lists[], int seed) {
-    srand ( seed );
+void scenario2(int capacity, int max_floors, struct Node *lists[]) {
+   
 
     //Randomly generates passenger number 
     int number_passenger = (rand() % capacity)+1;
@@ -47,8 +45,8 @@ void scenario2(int capacity, int max_floors, struct Node *lists[], int seed) {
     lists[1] = head2;
 }
 
-void scenario3(int capacity, int max_floors, int maxFloor1, struct Node *lists[], int seed) {
-    srand ( seed );
+void scenario3(int capacity, int max_floors, int maxFloor1, struct Node *lists[]) {
+   
 
     //Randomly generates passenger number 
     int number_passenger = (rand() % capacity)+1;
@@ -71,6 +69,8 @@ void scenario3(int capacity, int max_floors, int maxFloor1, struct Node *lists[]
     lists[1] = head2;
 }
 
+
+// Pushs a node for each passenger and sorts the node in the linked list
 void append(struct Node** head_ref, int new_floor) {
     // Allocate memory for new node and initialize its floor value
     struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
@@ -114,34 +114,128 @@ void append(struct Node** head_ref, int new_floor) {
 
 
 
-int sec = 0;
-int floor_cur = 0;
-int floor_next = 0;
-int idx = 0;
-
 //loop through linked list and return the sec of each iteration per secenario
 int iterateList(struct Node *node) {
-    
+    int floor_cur = 0;
+    int floor_prev = 0;
     int sec = 0;
     
     struct Node* current = node;
-    while (current->next != NULL){
-       
-        idx ++;
+
+    while (current != NULL){
         floor_cur = current->floor;
-        floor_next = current ->next->floor;
-        if (idx==1){
-            sec += floor_cur*3;
-            
-
-        };
+        // printf("%d\n", floor_cur);
         
-        sec += (floor_next-floor_cur)*3;
-
+        // for each unqiue floor it will add 15 secs to the time
+        if (floor_cur-floor_prev > 0 ){
+            sec += 15;
+        }   
+        sec += (floor_cur-floor_prev)*3;
+        // the prev became the current
+        floor_prev = current->floor;
         current = current->next;
   }
-
-  
+//   printf("/////////////////////////////////////////////\n");
 
   return sec;
 }
+
+// prints the average, min, and max times for Secenario 1
+void AnalysisSec1(struct Node* scenario){
+    
+    
+    int n = 0;
+    int total = 0;
+    int maximum = 0;
+    int minimum = INT_MAX; //start minimum at a large number 
+    double average = 0;
+    
+
+    while(n < 1000){
+
+        scenario1(18,20,scenario);
+        int sec = iterateList(scenario);
+        total += sec;
+
+        if (maximum < sec){
+            maximum = sec;  
+        }
+        else if (minimum > sec){
+            minimum = sec;
+        }
+        n++;
+    }
+    average = total/n;
+
+    printf("\nFor Scenario 1, minimum is %d , the maximum is %d , the average is %.3f\n ", 
+                         minimum , maximum , average);
+
+}
+
+// prints the average, min, and max times for Secenario 2
+void AnalysisSec2(struct Node* scenario[]){
+    
+    int n = 0;
+    int total = 0;
+    int maximum = 0;
+    int minimum = INT_MAX;
+    double average = 0;
+
+    while(n < 1000){
+
+        scenario2(18,20,scenario);
+        int sec = iterateList(scenario[0]);
+        int sec2 = iterateList(scenario[1]);
+        total += (sec +sec2);
+       
+        if (maximum < sec){
+            maximum = sec;  
+        }
+        else if (minimum > sec){
+            minimum = sec;
+        }
+        n++;
+    }
+    average = total/n;
+
+    printf("For Scenario 2, minimum is %d , the maximum is %d , the average is %.3f\n ", 
+                         minimum , maximum , average);
+    
+
+}
+
+
+// prints the average, min, and max times for Secenario 3 and return the maximum 
+int AnalysisSec3(int maxFloor1,struct Node* scenario[]){
+    
+    int n = 0;
+    int total = 0;
+    int maximum = 0;
+    int minimum = INT_MAX;
+    double average = 0;
+
+    while(n < 1000){
+
+        scenario3(18,20,maxFloor1,scenario);
+        int sec = iterateList(scenario[0]);
+        int sec2 = iterateList(scenario[0]);
+        total += (sec + sec2);
+       
+        if (maximum < sec){
+            maximum = sec;  
+        }
+        else if (minimum > sec){
+            minimum = sec;
+        }
+        n++;
+    }
+    average = total/n;
+
+    printf("For Scenario 3, minimum is %d , the maximum is %d , the average is %.3f\n ", 
+                         minimum , maximum , average);
+
+    return maximum;
+}
+
+
+

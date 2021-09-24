@@ -1,76 +1,43 @@
 #include <stdio.h>
 #include "elevator.h"
-#include <limits.h>
+#include <time.h>
 
 
-// returns the average, min, and max times for every scenario
-int analysis(){
-    // Initialize a node to hold the head value
-    struct Node sc1 = {-1,NULL};
+  
+// return the optimum max floor number for secanrio3
+int GetOptimum(struct Node* scenario3[]){
+                                          
+    int maximum = INT_MAX;
+    int maxFloor1 = 0;
     
-
-   
-    // struct Node first_Node = {-1,NULL};
-    // struct Node second_Node = {-1,NULL};
-
-    
-    struct Node sc2[2];
-    struct Node sc3[2];
-
-    
-    // scenario2(18,20, &sc2);
-    // scenario3(18,20, 10, &sc3);
-    // iterateList(&sc2[0]);
-   
-
-
-   
-
-    int n = 0;
-    int total = 0;
-    int maximum = 0;
-    int minimum = INT_MAX;
-    double average = 0;
-    
-
-
-    while(n < 1000){
-        
-        
-       
-        scenario1(18,20,&sc1,n);
-        scenario2(18,20, &sc2); 
-        int sec = iterateList(&sc1);
-        total += sec;
-
-       
-        if (maximum < sec){
-            maximum = sec;  
+    for(int i=6; i <= 13; i++ ){
+        int max = AnalysisSec3(i,scenario3);
+        if ( maximum > max){
+            maximum = max;
+            maxFloor1 = i;
         }
-        else if (minimum > sec){
-            minimum = sec;
-        }
-    
-        n++;
-
+        
     }
-    average = total/n;
-    printf("%d\n",maximum );
-    printf("%d\n",minimum );
-    printf("%f", average);
+    printf("%d",maxFloor1);
 
-
-    return 0;
-
-
+    return maxFloor1;
 }
 
+
+
 int main(){
-   
     
+    struct Node sc1 = {-1,NULL};
+    struct Node* sc2[2] = {NULL,NULL};
+    struct Node* sc3[2] = {NULL,NULL};
+    
+    // GetOptimum(sc3); 
+    AnalysisSec1(&sc1);
+    AnalysisSec2(sc2);
+    AnalysisSec3(11,sc3);
 
    
-    analysis();
+    
     return 0;
 
 }
