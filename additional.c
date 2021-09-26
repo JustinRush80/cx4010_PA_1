@@ -124,7 +124,7 @@ int iterateList(struct Node *node) {
 
     while (current != NULL){
         floor_cur = current->floor;
-        // printf("%d\n", floor_cur);
+        printf("%d\n", floor_cur);
         
         // for each unqiue floor it will add 15 secs to the time
         if (floor_cur-floor_prev > 0 ){
@@ -135,7 +135,7 @@ int iterateList(struct Node *node) {
         floor_prev = current->floor;
         current = current->next;
   }
-//   printf("/////////////////////////////////////////////\n");
+  printf("/////////////////////////////////////////////\n");
 
   return sec;
 }
@@ -188,7 +188,8 @@ void AnalysisSec2(struct Node* scenario[]){
         int sec2 = iterateList(scenario[1]);
         total += (sec +sec2);
        
-        if (maximum < sec){
+
+        if (maximum < sec){ //Replace maximum if there is a instance where seconds 
             maximum = sec;  
         }
         else if (minimum > sec){
