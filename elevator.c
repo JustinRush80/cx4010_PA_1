@@ -31,10 +31,10 @@ int main(){
     struct Node* sc2[2] = {NULL,NULL};
     struct Node* sc3[2] = {NULL,NULL};
     
-    // GetOptimum(sc3); 
+    GetOptimum(sc3); 
     AnalysisSec1(&sc1);
     AnalysisSec2(sc2);
-    AnalysisSec3(11,sc3);
+    AnalysisSec3(6,sc3);
 
    
     

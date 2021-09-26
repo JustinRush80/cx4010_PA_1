@@ -194,6 +194,13 @@ void AnalysisSec2(struct Node* scenario[]){
         else if (minimum > sec){
             minimum = sec;
         }
+
+        if (maximum < sec2){
+            maximum = sec;  
+        }
+        else if (minimum > sec2){
+            minimum = sec2;
+        }
         n++;
     }
     average = total/n;
@@ -218,8 +225,9 @@ int AnalysisSec3(int maxFloor1,struct Node* scenario[]){
 
         scenario3(18,20,maxFloor1,scenario);
         int sec = iterateList(scenario[0]);
-        int sec2 = iterateList(scenario[0]);
+        int sec2 = iterateList(scenario[1]);
         total += (sec + sec2);
+        
        
         if (maximum < sec){
             maximum = sec;  
@@ -227,6 +235,15 @@ int AnalysisSec3(int maxFloor1,struct Node* scenario[]){
         else if (minimum > sec){
             minimum = sec;
         }
+
+        if (maximum < sec2){
+            maximum = sec;  
+        }
+        else if (minimum > sec2){
+            minimum = sec2;
+        }
+
+
         n++;
     }
     average = total/n;
