@@ -38,26 +38,28 @@ void append(struct Node** head_ref, int nextWord) {
 }
 
 void printlList(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST], struct Node *node, int end) {
-//loop through linked list and print the floor values
-int wordIdx = -1;
-while (node != NULL)
-{
-    wordIdx = node->wordIdx;
+    //loop through linked list and print the floor values
+    int wordIdx = -1;
+    while (node != NULL)
+    {
+        wordIdx = node->wordIdx;
 
-    if (wordIdx == end) {
-        printf("%s",string[wordIdx].word);  
-    } else {
-        printf("%s -> ",string[wordIdx].word);
+        if (wordIdx == end) {
+            printf("%s",string[wordIdx].word);  
+        } else {
+            printf("%s -> ",string[wordIdx].word);
+        }
+
+        node = node->next;
     }
-    
-    node = node->next;
-}
 
 }
 
 void pathFind(struct Node* path, int* adjMat, int start, int end) {
     path->wordIdx = end;
-
+    //Initialize two matrixes which will contain information about:
+    //  checking: a queue which has information about which nodes need to be checked next
+    //  visited: a list which has information about whether a given node has been visited and what its parent node
     int checking[WORDLIST];
     int chSt = 0;
     int chEnd = 0;
@@ -76,6 +78,7 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
     int pathFound = 0; 
     int linked = 0;
     
+    //While there are items in the queue and the end hasn't been reached, search nodes via breadth first search
     while ((chEnd-chSt)>0 && pathFound == 0) {
         for(int i = 0; i < WORDLIST; i++) {
             
@@ -92,6 +95,10 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
         }
         chSt += 1;
     }
+    
+    //Backsolves to find the path from the visited list, which contains parent node information.
+    //If no path was found, just returns a linked list of length 1 with value -1
+    //Otherwise, updates the given path pointer with the list.
     if (pathFound == 0) {
         path->wordIdx = -1;
     } else {
