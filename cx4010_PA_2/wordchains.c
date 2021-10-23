@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int numWords = 7;
+
+#define WORDLIST 500
 
 struct Node
 {
@@ -9,9 +10,24 @@ struct Node
     struct Node* next;
 };
 
+struct mapping
+{
+    int key;
+    char word[5];
+};
+
+// Open the file and intialize the mapping with the word list 
+void CreateMapping (char* filename,struct mapping string[WORDLIST]);
+// Using the mapping to create a abjactery martix
+void CreateAbJMartix (struct mapping string[WORDLIST],int matrix[WORDLIST][WORDLIST]);
+//Compare the a string to all the other strings return the difference 
+int CompareString(char* string1, char* string2);
+
+void PrintString(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST]);
+
 void printList(int list[]);
 void append(struct Node** head_ref, int nextWord);
-void printlList(struct Node *node);
+void printlList(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST], struct Node *node, int end);
 void pathFind(struct Node* path, int* adjMat, int start, int end);
 
 int main (int argc, char **argList) {
@@ -19,22 +35,26 @@ int main (int argc, char **argList) {
     start = atoi(argList[1]);
     end = atoi(argList[2]);
 
-    int adjMat[7][7] = {{1, 1, 0, 0, 0, 1, 0}, {1, 0, 0, 0, 1, 1, 1}, {0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 1}, {0, 0, 1, 0, 1, 0, 1}, {1, 1, 0, 0, 0, 1, 0}, {0, 1, 0, 0, 1, 0, 1}};
-    //printf("%d,%d",start,end);
-
+    struct mapping string[WORDLIST];  
+    CreateMapping("wordlist.txt",string);
+    
+    int matrix[WORDLIST][WORDLIST];
+    CreateAbJMartix(string,matrix);
     struct Node path = {-1,NULL};
-    pathFind(&path, *adjMat, end, start);
-    printlList(&path);
+    pathFind(&path, *matrix, end, start);
+    //printlList(&path);
 
     if (path.wordIdx == -1) {
         printf("No path available.");
+    } else {
+        printlList(string,matrix,&path,end);
     }
 
     return 1;
 }
 
 void printList(int list[]) {
-    for(int i = 0; i < numWords; i++) {
+    for(int i = 0; i < WORDLIST; i++) {
         printf("%d ",list[i]);
     }
 }
@@ -65,25 +85,34 @@ void append(struct Node** head_ref, int nextWord) {
     return;
 }
 
-void printlList(struct Node *node) {
+void printlList(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST], struct Node *node, int end) {
 //loop through linked list and print the floor values
-  while (node != NULL)
-  {
-     printf(" %d ", node->wordIdx);
-     node = node->next;
-  }
+int wordIdx = -1;
+while (node != NULL)
+{
+    wordIdx = node->wordIdx;
+
+    if (wordIdx == end) {
+        printf("%s",string[wordIdx].word);  
+    } else {
+        printf("%s -> ",string[wordIdx].word);
+    }
+    
+    node = node->next;
+}
+
 }
 
 void pathFind(struct Node* path, int* adjMat, int start, int end) {
     path->wordIdx = end;
 
-    int checking[numWords];
+    int checking[WORDLIST];
     int chSt = 0;
     int chEnd = 0;
 
-    int visited[numWords];
+    int visited[WORDLIST];
 
-    for(int i = 0; i < numWords; i++) {
+    for(int i = 0; i < WORDLIST; i++) {
         checking[i] = -1;
         visited[i] = -1;
     }
@@ -96,9 +125,9 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
     int linked = 0;
     
     while ((chEnd-chSt)>0 && pathFound == 0) {
-        for(int i = 0; i < numWords; i++) {
+        for(int i = 0; i < WORDLIST; i++) {
             
-            linked = *(adjMat+i+checking[chSt]*numWords);
+            linked = *(adjMat+i+checking[chSt]*WORDLIST);
             if (linked == 1 && visited[i] == -1 && !pathFound) {
                 visited[i] = checking[chSt];
                 
@@ -122,6 +151,78 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
         }
     }
 
-    
+}
 
+void CreateMapping(char* filename, struct mapping string[WORDLIST])
+{
+    FILE *fp;
+    fp = fopen(filename,"r");
+    int i = 0;
+    
+    while(fscanf(fp, "%s", string[i].word)!=EOF) // store the string to the struct mapping
+    { 
+        string[i].key = i; // set the key to the string to be it's index 
+        i ++;  
+    }  
+    fclose(fp);
+
+}
+
+int CompareString(char* string1, char* string2)
+{   int count = 0;
+    for(int letter = 0 ; letter<5; letter++)
+    {   
+        if (string1[letter] != string2[letter]){
+            count+=1;
+        }
+
+        if (count > 1){
+            return 100;
+        }
+    }
+    
+    return count; 
+}
+
+void CreateAbJMartix (struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST])
+{   
+    
+    
+    for(int i = 0; i < WORDLIST ; i++)
+    {  
+        for(int j = 0; j<WORDLIST; j++)
+        {
+            int count = CompareString(string[i].word,string[j].word);
+            if (count == 1){
+                matrix[i][j] = 1; 
+            }
+            else 
+            {
+                matrix[i][j] = 0;
+            }
+               
+
+        }
+        
+    }
+
+
+}
+
+void PrintString(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST])
+{
+    for(int a = 0 ; a<WORDLIST; a++ ){
+        if (a != 0){
+		   printf("\n");
+       }
+       printf("%s ",string[a].word);
+       for (int b = 0; b<WORDLIST; b++){
+           if (matrix[a][b]== 1){
+               printf("Connects to\t %s ",string[b].word);
+            
+           }
+           
+
+       }
+    }
 }
