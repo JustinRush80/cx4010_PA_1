@@ -11,17 +11,26 @@ struct mapping
 // Open the file and intialize the mapping with the word list 
 void CreateMapping (char* filename,struct mapping string[WORDLIST]);
 // Using the mapping to create a abjactery martix
-void CreateAbJMartix (struct mapping string[WORDLIST]);
+void CreateAbJMartix (struct mapping string[WORDLIST],int matrix[WORDLIST][WORDLIST]);
 //Compare the a string to all the other strings return the difference 
+int CompareString(char* string1, char* string2)
+
+void PrintString(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST]);
 
 
 
 
 int main()
 {
-    struct mapping string[WORDLIST];
+    struct mapping string[WORDLIST];  
     CreateMapping("wordlist.txt",string);
-    CreateAbJMartix(string);
+    
+    int matrix[WORDLIST][WORDLIST];
+    CreateAbJMartix(string,matrix);
+
+    PrintString(string,matrix);
+
+
     
 }
 
@@ -56,9 +65,9 @@ int CompareString(char* string1, char* string2)
     return count; 
 }
 
-void CreateAbJMartix (struct mapping string[WORDLIST])
+void CreateAbJMartix (struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST])
 {   
-    int matrix[WORDLIST][WORDLIST];
+    
     
     for(int i = 0; i < WORDLIST ; i++)
     {  
@@ -78,15 +87,23 @@ void CreateAbJMartix (struct mapping string[WORDLIST])
         
     }
 
-    
+
+}
+
+void PrintString(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST])
+{
     for(int a = 0 ; a<WORDLIST; a++ ){
         if (a != 0){
 		   printf("\n");
        }
+       printf("%s ",string[a].word);
        for (int b = 0; b<WORDLIST; b++){
-           printf("%d ",matrix[a][b]);
+           if (matrix[a][b]== 1){
+               printf("Connects to\t %s ",string[b].word);
+
+           }
+           
 
        }
-   }
-
+    }
 }
