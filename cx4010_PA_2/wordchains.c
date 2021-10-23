@@ -25,25 +25,35 @@ int CompareString(char* string1, char* string2);
 
 void PrintString(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST]);
 
-void printList(int list[]);
+
+//Adds a node onto a list
 void append(struct Node** head_ref, int nextWord);
+//Converts the found path of word indices into words and prints to terminal
 void printlList(struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST], struct Node *node, int end);
+//Finds a path between the start and end word indices
 void pathFind(struct Node* path, int* adjMat, int start, int end);
 
 int main (int argc, char **argList) {
+
+    //Read in arguments
     int start,end;
     start = atoi(argList[1]);
     end = atoi(argList[2]);
 
+
+    //Create a map from the input list
     struct mapping string[WORDLIST];  
     CreateMapping("wordlist.txt",string);
     
+    //Convert the map and structures into a matrix
     int matrix[WORDLIST][WORDLIST];
     CreateAbJMartix(string,matrix);
+
+    //Initialize a path and run the path finding algorithm
     struct Node path = {-1,NULL};
     pathFind(&path, *matrix, end, start);
-    //printlList(&path);
 
+    //Print the results of the path finding.
     if (path.wordIdx == -1) {
         printf("No path available.");
     } else {
@@ -53,11 +63,6 @@ int main (int argc, char **argList) {
     return 1;
 }
 
-void printList(int list[]) {
-    for(int i = 0; i < WORDLIST; i++) {
-        printf("%d ",list[i]);
-    }
-}
 
 void append(struct Node** head_ref, int nextWord) {
     struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
@@ -106,10 +111,12 @@ while (node != NULL)
 void pathFind(struct Node* path, int* adjMat, int start, int end) {
     path->wordIdx = end;
 
+    //Initialize two matrixes which will contain information about:
+    //  checking: a queue which has information about which nodes need to be checked next
+    //  visited: a list which has information about whether a given node has been visited and what its parent node
     int checking[WORDLIST];
     int chSt = 0;
     int chEnd = 0;
-
     int visited[WORDLIST];
 
     for(int i = 0; i < WORDLIST; i++) {
@@ -123,7 +130,9 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
 
     int pathFound = 0; 
     int linked = 0;
-    
+
+
+    //While there are items in the queue and the end hasn't been reached, search nodes via breadth first search
     while ((chEnd-chSt)>0 && pathFound == 0) {
         for(int i = 0; i < WORDLIST; i++) {
             
@@ -140,11 +149,14 @@ void pathFind(struct Node* path, int* adjMat, int start, int end) {
         }
         chSt += 1;
     }
+
+    //Backsolves to find the path from the visited list, which contains parent node information.
+    //If no path was found, just returns a linked list of length 1 with value -1
+    //Otherwise, updates the given path pointer with the list.
     if (pathFound == 0) {
         path->wordIdx = -1;
     } else {
         int currentWord = end;
-    
         while(currentWord != start) {
             currentWord = visited[currentWord];
             append(&path, currentWord);
