@@ -8,18 +8,17 @@ struct Node
 
 struct mapping
 {
-    int key;
     char word[5];
 };
 
 // Open the file and intialize the mapping with the word list 
 void CreateMapping (char* filename,struct mapping string[WORDLIST]);
-// Using the mapping to create a abjactery martix
+// Using the mapping to create a adjacency martix
 void CreateAbJMartix (struct mapping string[WORDLIST],int matrix[WORDLIST][WORDLIST]);
 //Compare the a string to all the other strings return the difference 
 int CompareString(char* string1, char* string2);
 
-void printList(int list[]);
+
 //Adds a node onto a list
 void append(struct Node** head_ref, int nextWord);
 //Converts the found path of word indices into words and prints to terminal

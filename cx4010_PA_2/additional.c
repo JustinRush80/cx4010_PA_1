@@ -120,13 +120,14 @@ void CreateMapping(char* filename, struct mapping string[WORDLIST])
     
     while(fscanf(fp, "%s", string[i].word)!=EOF) // store the string to the struct mapping
     { 
-        string[i].key = i; // set the key to the string to be it's index 
+        
         i ++;  
     }  
     fclose(fp);
 
 }
 
+// Compare letter for between two strings
 int CompareString(char* string1, char* string2)
 {   int count = 0;
     for(int letter = 0 ; letter<5; letter++)
@@ -146,7 +147,8 @@ int CompareString(char* string1, char* string2)
 void CreateAbJMartix (struct mapping string[WORDLIST], int matrix[WORDLIST][WORDLIST])
 {   
     
-    
+    // For each word compare to every other word in the list  
+    // set 1 if the difference is one
     for(int i = 0; i < WORDLIST ; i++)
     {  
         for(int j = 0; j<WORDLIST; j++)
